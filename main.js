@@ -39,13 +39,13 @@ function buyGoldPerClick() {
 }
 
 function mineGold() {
-    gameData.gold += Math.round(gameData.goldPerClick * (1 + gameData.goldMiningSkill / 10))
+    gameData.gold += Math.round(gameData.goldPerClick * (1 + gameData.goldMiningSkill.lvl / 10))
     document.getElementById("goldMined").innerHTML = gameData.gold + " Gold Mined"
     gameData.goldMiningSkill.increaseXp(1)
 }
 
 function changeSkillMineGoldHTML() {
-    document.getElementById("goldMiningSkill").innerHTML = gameData.goldMiningSkill + " Mine Gold Skill"
+    document.getElementById("goldMiningSkill").innerHTML = gameData.goldMiningSkill.lvl + " Mine Gold Skill"
 }
 /*
 var mainGameLoop = window.setInterval(function () {
