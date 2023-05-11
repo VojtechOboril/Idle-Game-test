@@ -1,7 +1,9 @@
 var gameData = {
     gold: 0,
     goldPerClick: 1,
-    goldPerClickCost: 10
+    goldPerClickCost: 10,
+    goldMiningSkill: 0,
+    goldMiningSkillProgress: 0
 }
 
 function buyGoldPerClick() {
@@ -17,6 +19,13 @@ function buyGoldPerClick() {
 function mineGold() {
     gameData.gold += gameData.goldPerClick
     document.getElementById("goldMined").innerHTML = gameData.gold + " Gold Mined"
+
+    gameData.goldMiningSkillProgress += 1
+    if(gameData.goldMiningSkill + 10 <= gameData.goldMiningSkillProgress) {
+        goldMiningSkill += 1
+        goldMiningSkillProgress = 0
+        document.getElementById("goldMiningSkill").innerHTML = goldMiningSkill + " Mine Gold Skill"
+    }
 }
 
 var mainGameLoop = window.setInterval(function () {
