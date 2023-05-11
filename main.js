@@ -22,8 +22,8 @@ function mineGold() {
 
     gameData.goldMiningSkillProgress += 1
     if(gameData.goldMiningSkill + 10 <= gameData.goldMiningSkillProgress) {
-        goldMiningSkill += 1
-        goldMiningSkillProgress = 0
+        gameData.goldMiningSkill += 1
+        gameData.goldMiningSkillProgress = 0
         document.getElementById("goldMiningSkill").innerHTML = gameData.goldMiningSkill + " Mine Gold Skill"
     }
 }
