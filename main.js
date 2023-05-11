@@ -9,10 +9,10 @@ class Skill {
     }
 
     increaseXp(amount = 1) {
-        xp += amount
-        while (xp >= this.xpNeeded) {
-            xp -= this.xpNeeded
-            lvl += 1
+        this.xp += amount
+        while (this.xp >= this.xpNeeded) {
+            this.xp -= this.xpNeeded
+            this.lvl += 1
             this.xpNeeded = this.increaseXpFunction(this.xpNeeded)
             if (this.changeHTMLFunction !== null) {
                 this.changeHTMLFunction()
