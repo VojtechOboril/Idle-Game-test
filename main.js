@@ -24,7 +24,7 @@ function mineGold() {
     if(gameData.goldMiningSkill + 10 <= gameData.goldMiningSkillProgress) {
         goldMiningSkill += 1
         goldMiningSkillProgress = 0
-        document.getElementById("goldMiningSkill").innerHTML = goldMiningSkill + " Mine Gold Skill"
+        document.getElementById("goldMiningSkill").innerHTML = gameData.goldMiningSkill + " Mine Gold Skill"
     }
 }
 
@@ -32,9 +32,12 @@ var mainGameLoop = window.setInterval(function () {
     mineGold()
 }, 1000)
 
-var savegame = JSON.parse(localStorage.getItem("goldMinerSave"))
+//var savegame = JSON.parse(localStorage.getItem("goldMinerSave"))
 if (savegame !== null) {
     gameData = savegame
+    document.getElementById("goldMined").innerHTML = gameData.gold + " Gold Mined"
+    document.getElementById("perClickUpgrade").innerHTML = "Upgrade Pickaxe (Currently Level " + gameData.goldPerClick + ") Cost: " + gameData.goldPerClickCost + " Gold"
+    document.getElementById("goldMiningSkill").innerHTML = gameData.goldMiningSkill + " Mine Gold Skill"
 }
 
 var saveGameLoop = window.setInterval(function () {
