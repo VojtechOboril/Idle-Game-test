@@ -33,13 +33,13 @@ var mainGameLoop = window.setInterval(function () {
 }, 1000)
 
 //var savegame = JSON.parse(localStorage.getItem("goldMinerSave"))
-if (savegame !== null) {
+//if (savegame !== null) {
     gameData = savegame
     document.getElementById("goldMined").innerHTML = gameData.gold + " Gold Mined"
     document.getElementById("perClickUpgrade").innerHTML = "Upgrade Pickaxe (Currently Level " + gameData.goldPerClick + ") Cost: " + gameData.goldPerClickCost + " Gold"
     document.getElementById("goldMiningSkill").innerHTML = gameData.goldMiningSkill + " Mine Gold Skill"
-}
+//}
 
-var saveGameLoop = window.setInterval(function () {
+/*var saveGameLoop = window.setInterval(function () {
     localStorage.setItem("goldMinerSave", JSON.stringify(gameData))
-}, 15000)
+}, 15000)*/
