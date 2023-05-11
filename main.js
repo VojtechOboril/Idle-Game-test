@@ -25,7 +25,7 @@ var gameData = {
     gold: 0,
     goldPerClick: 1,
     goldPerClickCost: 10,
-    goldMiningSkill: new Skill("Gold Mining", 10, changeHTMLFunction = changeSkillMineGoldHTML)
+    goldMiningSkill: new Skill("Gold Mining", 10, 0, 0, function (x) { return x + 1 }, changeHTMLFunction = changeSkillMineGoldHTML)
 }
 
 function buyGoldPerClick() {
