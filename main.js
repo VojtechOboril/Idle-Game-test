@@ -34,7 +34,7 @@ var mainGameLoop = window.setInterval(function () {
 
 //var savegame = JSON.parse(localStorage.getItem("goldMinerSave"))
 //if (savegame !== null) {
-    gameData = savegame
+    //gameData = savegame
     document.getElementById("goldMined").innerHTML = gameData.gold + " Gold Mined"
     document.getElementById("perClickUpgrade").innerHTML = "Upgrade Pickaxe (Currently Level " + gameData.goldPerClick + ") Cost: " + gameData.goldPerClickCost + " Gold"
     document.getElementById("goldMiningSkill").innerHTML = gameData.goldMiningSkill + " Mine Gold Skill"
