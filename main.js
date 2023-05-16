@@ -22,9 +22,10 @@ class Skill {
 }
 
 class Upgrade {
-    constructor(name, cost, increaseCostFunction, changeHTMLFunction, upgradeFunction) {
+    constructor(name, costFunction, increaseCostFunction, changeHTMLFunction, upgradeFunction) {
         this.name = name
-        this.cost = cost
+        this.cost = costFunction(0)
+        this.costFunction = costFunction
         this.lvl = 0
         this.increaseCostFunction = increaseCostFunction    // how does the cost increase
         this.changeHTMLFunction = changeHTMLFunction    // what changes on the page on upgrade
@@ -32,14 +33,30 @@ class Upgrade {
     }
 
     upgrade() {
-        if (gameData.gold >= this.cost) {
-            gameData.gold -= this.cost
-            this.cost = this.increaseCostFunction(this.cost)
-            this.changeHTMLFunction()
+        if (this.__checkCosts()) {
+            for(let key in this.cost) {
+                gameData.materials[key] -= this.cost[key]
+            }
             this.upgradeFunction(this.lvl)
             this.lvl += 1
+            this.cost = this.costFunction(this.lvl)
+            this.changeHTMLFunction()
         }
     }
+
+    __checkCosts() {
+        for(let key in this.cost) {
+            if(gameData.materials[key] < this.cost[key]) {
+                return false
+            }
+        }
+        return true
+    }
+}
+
+var materialsBase = {
+    gold: 0,
+    wood: 0
 }
 
 var gameData = {
@@ -47,47 +64,61 @@ var gameData = {
         gold: 0,
         wood: 0
     },
-    goldPerClick: 1,
-    woodPerClick: 1,
-    upgradeGoldPerClick: new Upgrade("Gold Per Click", 10, function (x) { return 2 * x }, changeUpgradeGoldPerclick, upgradeUpgradeGoldPerClick),
-    skillMiningGold: new Skill("Gold Mining", 10, 0, 0, skillMiningIncrease, changeSkillMineGoldHTML),
-    skillMiningWood: new Skill("Wood Mining", 10, 0, 0, skillMiningIncrease, changeSkillMineWoodHTML)
+    materialsClickValues: {
+        gold: 1,
+        wood: 1
+    },
+    skills: {
+        miningGold: new Skill("Gold Mining", 10, 0, 0, skillMiningIncrease, changeSkillMineGoldHTML),
+        miningWood: new Skill("Wood Mining", 10, 0, 0, skillMiningIncrease, changeSkillMineWoodHTML)
+    },
+    upgrades: {
+        goldPerClick: new Upgrade("Gold Per Click", upgradeCostGoldPerClick, function (x) { return 2 * x }, changeUpgradeGoldPerclick, upgradeUpgradeGoldPerClick)
+    }
 }
 
 function mineGold() {
-    gameData.materials.gold += Math.round(gameData.goldPerClick * (1 + gameData.skillMiningGold.lvl / 10))
+    gameData.materials.gold += Math.round(gameData.materialsClickValues.gold * (1 + gameData.skills.miningGold.lvl / 10))
     document.getElementById("goldMined").innerHTML = gameData.materials.gold + " Gold Mined"
-    gameData.skillMiningGold.increaseXp(1)
+    gameData.skills.miningGold.increaseXp(1)
 }
 
 function mineWood() {
-    gameData.materials.wood += Math.round(gameData.woodPerClick * (1 + gameData.skillMiningWood.lvl / 10))
+    gameData.materials.wood += Math.round(gameData.materialsClickValues.wood * (1 + gameData.skills.miningWood.lvl / 10))
     document.getElementById("woodMined").innerHTML = gameData.materials.wood + " Wood Chopped"
-    gameData.skillMiningWood.increaseXp(1)
+    gameData.skills.miningWood.increaseXp(1)
 }
 
 function changeUpgradeGoldPerclick() {
     document.getElementById("goldMined").innerHTML = gameData.materials.gold + " Gold Mined"
-    document.getElementById("upgradeGoldPerClick").innerHTML = "Upgrade Pickaxe (Currently Level " + gameData.goldPerClick + ") Cost: " + gameData.upgradeGoldPerClick.cost + " Gold"
+    document.getElementById("upgradeGoldPerClick").innerHTML = "Upgrade Pickaxe (Currently Level " + gameData.materialsClickValues.gold + ") Cost: " + gameData.upgrades.goldPerClick.cost.gold + " Gold"
 }
 
 function upgradeUpgradeGoldPerClick(lvl) {
-    gameData.goldPerClick += 1
+    gameData.materialsClickValues.gold += 1
 }
 
 function changeSkillMineGoldHTML() {
-    document.getElementById("skillMiningGold").textContent = gameData.skillMiningGold.lvl + " Mine Gold Skill,"
-    document.getElementById("progressSkillMiningGold").value = gameData.skillMiningGold.xp
-    document.getElementById("progressSkillMiningGold").max = gameData.skillMiningGold.xpNeeded
+    document.getElementById("skillMiningGold").textContent = gameData.skills.miningGold.lvl + " Mine Gold Skill,"
+    document.getElementById("progressSkillMiningGold").value = gameData.skills.miningGold.xp
+    document.getElementById("progressSkillMiningGold").max = gameData.skills.miningGold.xpNeeded
 }
 
 function changeSkillMineWoodHTML() {
-    document.getElementById("skillMiningWood").textContent = gameData.skillMiningWood.lvl + " Chop Wood Skill,"
-    document.getElementById("progressSkillMiningWood").value = gameData.skillMiningWood.xp
-    document.getElementById("progressSkillMiningWood").max = gameData.skillMiningWood.xpNeeded
+    document.getElementById("skillMiningWood").textContent = gameData.skills.miningWood.lvl + " Chop Wood Skill,"
+    document.getElementById("progressSkillMiningWood").value = gameData.skills.miningWood.xp
+    document.getElementById("progressSkillMiningWood").max = gameData.skills.miningWood.xpNeeded
 }
 
-function skillMiningIncrease(x) {return x + 1}
+function skillMiningIncrease(x) { return x + 1 }
+
+function upgradeCostGoldPerClick(lvl) {
+    mats = materialsBase
+    materialsBase.gold = 10 * 2**lvl
+    return mats
+}
+
+
 /*
 var mainGameLoop = window.setInterval(function () {
     mineGold()
