@@ -4,12 +4,26 @@
   <head>
     <meta charset="utf-8">
     <title>Gold Miner</title>
+    <link rel="stylesheet" href="styles.css">
   </head>
   <body>
-    <p id="goldMined">0 Gold Mined</p>
-    <button onclick="mineGold()">Mine Gold</button>
-    <button onclick="buyGoldPerClick()" id="perClickUpgrade">Upgrade Pickaxe (Currently Level 1) Cost: 10 Gold</button>
-    <p id="goldMiningSkill"> 0 Mine Gold Skill</p>
     <script src="main.js" charset="utf-8" type="text/javascript"></script>
+
+    <p id="goldMined">0 Gold</p>
+    <p id="woodMined">0 Wood</p>
+    <button onclick="mineGold()">Mine Gold</button>
+    <button onclick="mineWood()">Chop Wood</button>
+    <button onclick="gameData.upgradeGoldPerClick.upgrade()" id="upgradeGoldPerClick">Upgrade Pickaxe (Currently Level 1) Cost: 10 Gold</button>
+    <br>
+    <div class="skill">
+        <p id="skillMiningGold">0 Mine Gold Skill,</p>
+        <label for="progressSkillMiningGold">&nbspNext Level:&nbsp</label>
+        <progress id="progressSkillMiningGold" value="0" max="10"></progress>
+    </div>
+    <div class="skill">
+      <p id="skillMiningWood">0 Chop Wood Skill,</p>
+      <label for="progressSkillMiningWood">&nbspNext Level:&nbsp</label>
+      <progress id="progressSkillMiningWood" value="0" max="10"></progress>
+  </div>
   </body>
 </html>

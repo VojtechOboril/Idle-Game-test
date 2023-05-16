@@ -1,0 +1,20 @@
+.skill {
+    display: grid;
+    grid-auto-columns: max-content;
+}
+
+.skill p {
+    display: contents;
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.skill label {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.skill progress {
+    grid-column: 3;
+    grid-row: 1;
+}
