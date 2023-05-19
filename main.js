@@ -54,15 +54,11 @@ class Upgrade {
     }
 }
 
-var materialsBase = {
-    gold: 0,
-    wood: 0
-}
-
 var gameData = {
     materials: {
         gold: 0,
-        wood: 0
+        wood: 0,
+        stick: 0
     },
     materialsClickValues: {
         gold: 1,
@@ -77,20 +73,39 @@ var gameData = {
     }
 }
 
+var craftables = {
+    stick: {
+        wood: 1,
+        result: 2
+    }
+}
+
+var sellCosts = {
+    gold: 1,
+    wood: 5,
+    stick: 3
+}
+
+function updateMaterialHTML() {
+    for(key in gameData.materials) {
+        document.getElementById(key+"Material").textContent = gameData.materials[key] + " " + key
+    }
+}
+
 function mineGold() {
     gameData.materials.gold += Math.round(gameData.materialsClickValues.gold * (1 + gameData.skills.miningGold.lvl / 10))
-    document.getElementById("goldMined").innerHTML = gameData.materials.gold + " Gold Mined"
+    updateMaterialHTML()
     gameData.skills.miningGold.increaseXp(1)
 }
 
 function mineWood() {
     gameData.materials.wood += Math.round(gameData.materialsClickValues.wood * (1 + gameData.skills.miningWood.lvl / 10))
-    document.getElementById("woodMined").innerHTML = gameData.materials.wood + " Wood Chopped"
+    updateMaterialHTML()
     gameData.skills.miningWood.increaseXp(1)
 }
 
 function changeUpgradeGoldPerclick() {
-    document.getElementById("goldMined").innerHTML = gameData.materials.gold + " Gold Mined"
+    updateMaterialHTML()
     document.getElementById("upgradeGoldPerClick").innerHTML = "Upgrade Pickaxe (Currently Level " + gameData.materialsClickValues.gold + ") Cost: " + gameData.upgrades.goldPerClick.cost.gold + " Gold"
 }
 
@@ -113,11 +128,43 @@ function changeSkillMineWoodHTML() {
 function skillMiningIncrease(x) { return x + 1 }
 
 function upgradeCostGoldPerClick(lvl) {
-    mats = materialsBase
-    materialsBase.gold = 10 * 2**lvl
-    return mats
+    return {gold: 2**lvl * 10}
 }
 
+function sell() {
+    value = document.getElementById("sellDropdown").value
+    if(gameData.materials[value] > 0) {
+        gameData.materials[value] -= 1
+        gameData.materials["gold"] += sellCosts[value]
+        updateMaterialHTML()
+    }
+}
+
+function changeSellButton() {
+    var e = document.getElementById("sellDropdown")
+    document.getElementById("sellButton").textContent = "Sell 1 " + e.value + " for " + sellCosts[e.value] + " gold"
+}
+
+function craft() {
+    var e = document.getElementById("craftDropdown").value
+    for(let key in craftables[e]) {
+        if(key != "result" && gameData.materials[key] < craftables[e][key]) {
+            return false
+        }
+    }
+    gameData.materials[e] += craftables[e].result
+    for(let key in craftables[e]) {
+        if(key != "result") {
+            gameData.materials[key] -= craftables[e][key]
+        }
+    }
+    updateMaterialHTML()
+}
+
+function changeCraftButton() {
+    var e = document.getElementById("craftDropdown")
+    document.getElementById("craftButton").textContent = "Craft " + craftables[e.value].result + " " + e
+}
 
 /*
 var mainGameLoop = window.setInterval(function () {

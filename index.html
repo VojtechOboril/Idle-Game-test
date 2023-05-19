@@ -9,8 +9,19 @@
   <body>
     <script src="main.js" charset="utf-8" type="text/javascript"></script>
 
-    <p id="goldMined">0 Gold</p>
-    <p id="woodMined">0 Wood</p>
+    <div id="materials">
+
+    </div>
+    <script>
+      const element = document.getElementById("materials")
+      for(key in gameData.materials) {
+        const para = document.createElement("p")
+        para.setAttribute("id", key + "Material")
+        const node = document.createTextNode(gameData.materials[key] + " " + key)
+        para.appendChild(node)
+        element.appendChild(para)
+      }
+    </script>
     <button onclick="mineGold()">Mine Gold</button>
     <button onclick="mineWood()">Chop Wood</button>
     <button onclick="gameData.upgrades.goldPerClick.upgrade()" id="upgradeGoldPerClick">Upgrade Pickaxe (Currently Level 1) Cost: 10 Gold</button>
@@ -24,6 +35,34 @@
       <p id="skillMiningWood">0 Chop Wood Skill,</p>
       <label for="progressSkillMiningWood">&nbspNext Level:&nbsp</label>
       <progress id="progressSkillMiningWood" value="0" max="10"></progress>
-  </div>
+    </div>
+
+    <label for="sellDropdown">Choose a material to sell: </label>
+    <select name="sellDropdown" id="sellDropdown" onchange="changeSellButton()">
+      <script>
+        dd = document.getElementById("sellDropdown")
+        for(let key in sellCosts) {
+          option = new Option(key)
+          option.setAttribute("value", key)
+          dd.appendChild(option)
+        }
+        delete dd
+      </script>
+    </select>
+    <button onclick="sell()" name="sellDropdown" id="sellButton">Sell 1 gold for 1 gold</button>
+
+    <br>
+
+    <label for="craftDropdown">Choose an item to craft: </label>
+    <select name="craftDropdown" id="craftDropdown" onchange="changeCraftButton()">
+      <script>
+        dd = document.getElementById("craftDropdown")
+        for(let key in craftables) {
+          option = new Option(key)
+          dd.appendChild(option)
+        }
+      </script>
+    </select>
+    <button onclick=craft() name="craftDropdown" id="craftButton">Craft 2 stick</button>
   </body>
 </html>
