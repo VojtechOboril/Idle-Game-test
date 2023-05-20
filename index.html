@@ -10,31 +10,49 @@
     <script src="main.js" charset="utf-8" type="text/javascript"></script>
 
     <div id="materials">
-
+      <script>
+        element = document.getElementById("materials")
+        for(key in gameData.materials) {
+          para = document.createElement("p")
+          para.setAttribute("id", key + "Material")
+          node = document.createTextNode(gameData.materials[key] + " " + key)
+          para.appendChild(node)
+          element.appendChild(para)
+        }
+      </script>
     </div>
-    <script>
-      const element = document.getElementById("materials")
-      for(key in gameData.materials) {
-        const para = document.createElement("p")
-        para.setAttribute("id", key + "Material")
-        const node = document.createTextNode(gameData.materials[key] + " " + key)
-        para.appendChild(node)
-        element.appendChild(para)
-      }
-    </script>
     <button onclick="mineGold()">Mine Gold</button>
     <button onclick="mineWood()">Chop Wood</button>
     <button onclick="gameData.upgrades.goldPerClick.upgrade()" id="upgradeGoldPerClick">Upgrade Pickaxe (Currently Level 1) Cost: 10 Gold</button>
     <br>
-    <div class="skill">
-        <p id="skillMiningGold">0 Mine Gold Skill,</p>
-        <label for="progressSkillMiningGold">&nbspNext Level:&nbsp</label>
-        <progress id="progressSkillMiningGold" value="0" max="10"></progress>
-    </div>
-    <div class="skill">
-      <p id="skillMiningWood">0 Chop Wood Skill,</p>
-      <label for="progressSkillMiningWood">&nbspNext Level:&nbsp</label>
-      <progress id="progressSkillMiningWood" value="0" max="10"></progress>
+    <div id="skills" class="skills"> 
+      <script>
+        element = document.getElementById("skills")
+        for(key in gameData.skills) {
+          div = document.createElement("div")
+          div.setAttribute("class", "skill")
+
+          para = document.createElement("p")
+          para.setAttribute("id", "skill" + key)
+          node = document.createTextNode("0 " + gameData.skills[key].name + " Skill")
+          para.appendChild(node)
+          div.appendChild(para)
+
+          para = document.createElement("label")
+          para.setAttribute("for", "progressSkill" + key)
+          node = document.createTextNode("Next Level: ")
+          para.appendChild(node)
+          div.appendChild(para)
+
+          para = document.createElement("progress")
+          para.setAttribute("id", "progressSkill" + key)
+          para.setAttribute("value", "0")
+          para.setAttribute("max", "10")
+          div.appendChild(para)
+
+          element.appendChild(div)
+        }
+      </script>
     </div>
 
     <label for="sellDropdown">Choose a material to sell: </label>
@@ -64,5 +82,6 @@
       </script>
     </select>
     <button onclick=craft() name="craftDropdown" id="craftButton">Craft 2 stick</button>
+    <p id="craftMaterialsNeeded">Materials needed: 1 wood, 2 gold</caption>
   </body>
 </html>

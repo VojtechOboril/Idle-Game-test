@@ -1,20 +1,17 @@
 .skill {
-    display: grid;
-    grid-auto-columns: max-content;
+    display: table-row;
 }
 
 .skill p {
-    display: contents;
-    grid-column: 1;
-    grid-row: 1;
+    display: table-cell;
+    padding-right: 1em;
 }
 
 .skill label {
-    grid-column: 2;
-    grid-row: 1;
+    display: table-cell;
+    padding-right: 0.5em;
 }
 
 .skill progress {
-    grid-column: 3;
-    grid-row: 1;
+    display: table-cell;
 }

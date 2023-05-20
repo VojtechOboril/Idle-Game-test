@@ -58,15 +58,17 @@ var gameData = {
     materials: {
         gold: 0,
         wood: 0,
-        stick: 0
+        stick: 0,
+        plank: 0
     },
     materialsClickValues: {
         gold: 1,
         wood: 1
     },
     skills: {
-        miningGold: new Skill("Gold Mining", 10, 0, 0, skillMiningIncrease, changeSkillMineGoldHTML),
-        miningWood: new Skill("Wood Mining", 10, 0, 0, skillMiningIncrease, changeSkillMineWoodHTML)
+        miningGold: new Skill("Gold Mining", 10, 0, 0, skillMiningIncrease, changeSkillsHTML),
+        miningWood: new Skill("Wood Chopping", 10, 0, 0, skillMiningIncrease, changeSkillsHTML),
+        crafting: new Skill("Crafting", 10, 0, 0, skillMiningIncrease, changeSkillsHTML)
     },
     upgrades: {
         goldPerClick: new Upgrade("Gold Per Click", upgradeCostGoldPerClick, function (x) { return 2 * x }, changeUpgradeGoldPerclick, upgradeUpgradeGoldPerClick)
@@ -76,14 +78,21 @@ var gameData = {
 var craftables = {
     stick: {
         wood: 1,
+        goldCost: 2,
         result: 2
+    }, 
+    plank: {
+        wood: 2,
+        goldCost: 3,
+        result: 1
     }
 }
 
 var sellCosts = {
     gold: 1,
     wood: 5,
-    stick: 3
+    stick: 4,
+    plank: 15
 }
 
 function updateMaterialHTML() {
@@ -119,10 +128,12 @@ function changeSkillMineGoldHTML() {
     document.getElementById("progressSkillMiningGold").max = gameData.skills.miningGold.xpNeeded
 }
 
-function changeSkillMineWoodHTML() {
-    document.getElementById("skillMiningWood").textContent = gameData.skills.miningWood.lvl + " Chop Wood Skill,"
-    document.getElementById("progressSkillMiningWood").value = gameData.skills.miningWood.xp
-    document.getElementById("progressSkillMiningWood").max = gameData.skills.miningWood.xpNeeded
+function changeSkillsHTML() {
+    for(let key in gameData.skills) {
+        document.getElementById("skill" + key).textContent = gameData.skills[key].lvl + " " + gameData.skills[key].name + " Skill"
+        document.getElementById("progressSkill" + key).value = gameData.skills[key].xp
+        document.getElementById("progressSkill" + key).max = gameData.skills[key].xpNeeded
+    }
 }
 
 function skillMiningIncrease(x) { return x + 1 }
@@ -147,23 +158,39 @@ function changeSellButton() {
 
 function craft() {
     var e = document.getElementById("craftDropdown").value
+    if(craftables[e].goldCost > gameData.materials.gold) {
+        return false
+    }
     for(let key in craftables[e]) {
-        if(key != "result" && gameData.materials[key] < craftables[e][key]) {
+        if(key != "result" && key != "goldCost" && gameData.materials[key] < craftables[e][key]) {
             return false
         }
     }
     gameData.materials[e] += craftables[e].result
+    gameData.materials.gold -= Math.round(craftables[e].goldCost / (1 + gameData.skills.crafting.lvl/30))
+
     for(let key in craftables[e]) {
-        if(key != "result") {
+        if(key != "result" && key != "goldCost") {
             gameData.materials[key] -= craftables[e][key]
         }
     }
+    gameData.skills.crafting.increaseXp()
     updateMaterialHTML()
 }
 
 function changeCraftButton() {
-    var e = document.getElementById("craftDropdown")
-    document.getElementById("craftButton").textContent = "Craft " + craftables[e.value].result + " " + e
+    var e = document.getElementById("craftDropdown").value
+    document.getElementById("craftButton").textContent = "Craft " + craftables[e].result + " " + e
+    document.getElementById("craftMaterialsNeeded").textContent = "Materials needed: "
+    for(let key in craftables[e]) {
+        if(key != "result" && key != "goldCost") {
+            document.getElementById("craftMaterialsNeeded").textContent += craftables[e][key] + " " + key + ", "
+        }
+        else if(key == "goldCost") {
+            document.getElementById("craftMaterialsNeeded").textContent += craftables[e][key] + " " + "gold" + ", "
+        }
+    }
+    
 }
 
 /*
